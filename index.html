@@ -10,8 +10,26 @@
         <h1>Minhas Tarefas</h1>
         <p>Organize o seu dia a dia</p>
     </header>
-    <main>
-
+    <main class="main-content">
+        <section class="task-list-container">
+            <ul class="task-list">
+                <li class="task-item">
+                    <input type="checkbox" id="task-1">
+                    <label for="task-1">Estudar HTML e CSS estruturado</label>
+                    <button class="delete-btn">Excluir</button>
+                </li>
+                <li class="task-item completed">
+                    <input type="checkbox" id="task-2" checked>
+                    <label for="task-2">Criar o layout base do projeto</label>
+                    <button class="delete-btn">Excluir</button>
+                </li>
+                <li class="task-item">
+                    <input type="checkbox" id="task-3">
+                    <label for="task-3">Configurar tipografia responsiva</label>
+                    <button class="delete-btn">Excluir</button>
+                </li>
+            </ul>
+        </section>
     </main>
     <footer class="main-footer">
         <p>&copy; 2026 - Gerenciador de Tarefas Pessoal</p>
