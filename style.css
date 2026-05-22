@@ -70,7 +70,7 @@ input, button, label { font-size: 1rem; }
 
 .task-form button {
     background-color: var(--primary-color);
-    color: white;
+    color: rgb(224, 224, 224);
     border: none;
     padding: 0.75rem 1.5rem;
     border-radius: 4px;
