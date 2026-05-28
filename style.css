@@ -5,13 +5,13 @@
 }
 
 :root {
-    --bg-color: #f4f7f6;
-    --card-color: #ffffff;
-    --primary-color: #3a8ae5;
+    --bg-color: #f4f7f7;
+    --card-color: #fffff1;
+    --primary-color: #3a8ae6;
     --text-color: #333333;
-    --text-light: #666666;
+    --text-light: #918f8f;
     --border-color: #ddd;
-    --danger-color: #e74c3c;
+    --danger-color: #e74c3e;
 }
 
 body {
