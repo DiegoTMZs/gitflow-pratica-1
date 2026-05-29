@@ -17,7 +17,6 @@ form.addEventListener("submit", function (event) {
 
     const taskText = input.value.trim();
 
-    // VALIDAÇÕES
     if (taskText === "") {
         alert("Digite uma tarefa!");
         input.focus();
@@ -36,54 +35,31 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
-    // verifica tarefa duplicada
-    const labels = document.querySelectorAll(".task-item label");
+    const taskExists = tasks.some(task => task.text.toLowerCase() === taskText.toLowerCase());
 
-    for (let label of labels) {
-        if (label.textContent.toLowerCase() === taskText.toLowerCase()) {
-            alert("Essa tarefa já existe.");
-            input.focus();
-            return;
-        }
+    if (taskExists) {
+        alert("Essa tarefa já existe.");
+        input.focus();
+        return;
     }
 
-    // MOSTRA SPINNER
     spinner.style.display = "block";
 
-    // simula carregamento
     setTimeout(() => {
+        const newTask = {
+            id: Date.now(),
+            text: taskText,
+            completed: false
+        };
 
-        const li = document.createElement("li");
-        li.classList.add("task-item");
-
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.id = `task-${taskId}`;
-
-        const label = document.createElement("label");
-        label.setAttribute("for", `task-${taskId}`);
-        label.textContent = taskText;
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.classList.add("delete-btn");
-        deleteBtn.textContent = "Excluir";
-
-        li.appendChild(checkbox);
-        li.appendChild(label);
-        li.appendChild(deleteBtn);
-
-        taskList.appendChild(li);
+        tasks.push(newTask);
+        saveTasks();
+        renderTasks();
 
         input.value = "";
-
-        taskId++;
-
-        // ESCONDE SPINNER
         spinner.style.display = "none";
-
     }, 1000);
 });
-
 // =========================
 // MARCAR COMO CONCLUÍDA
 // =========================
