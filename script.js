@@ -3,17 +3,12 @@ const input = document.querySelector(".task-form input");
 const taskList = document.querySelector(".task-list");
 const filter = document.querySelector("#filter");
 
-let taskId = 4;
-
-// =========================
-// CRIA SPINNER
-// =========================
 const spinner = document.createElement("div");
 spinner.classList.add("spinner");
 spinner.style.display = "none";
-
 document.body.appendChild(spinner);
 
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 // =========================
 // ADICIONAR TAREFA
 // =========================
