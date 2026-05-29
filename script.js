@@ -60,39 +60,33 @@ form.addEventListener("submit", function (event) {
         spinner.style.display = "none";
     }, 1000);
 });
-// =========================
-// MARCAR COMO CONCLUÍDA
-// =========================
 taskList.addEventListener("change", function (event) {
-
     if (event.target.type === "checkbox") {
-
         const taskItem = event.target.parentElement;
-
-        if (event.target.checked) {
-            taskItem.classList.add("completed");
-        } else {
-            taskItem.classList.remove("completed");
+        const taskId = Number(taskItem.dataset.id);
+        
+        const task = tasks.find(t => t.id === taskId);
+        
+        if (task) {
+            task.completed = event.target.checked;
+            saveTasks();
+            renderTasks();
         }
-
-        applyFilter();
     }
 });
 
-// =========================
-// EXCLUIR TAREFA
-// =========================
 taskList.addEventListener("click", function (event) {
-
     if (event.target.classList.contains("delete-btn")) {
-
         const confirmDelete = confirm("Deseja realmente excluir esta tarefa?");
 
         if (!confirmDelete) return;
 
         const taskItem = event.target.parentElement;
+        const taskId = Number(taskItem.dataset.id);
 
-        taskItem.remove();
+        tasks = tasks.filter(t => t.id !== taskId);
+        saveTasks();
+        renderTasks();
     }
 });
 
