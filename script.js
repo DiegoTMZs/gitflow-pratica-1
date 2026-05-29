@@ -148,3 +148,41 @@ function applyFilter() {
         }
     });
 }
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function renderTasks() {
+    taskList.innerHTML = "";
+    
+    tasks.forEach(task => {
+        const li = document.createElement("li");
+        li.classList.add("task-item");
+        li.dataset.id = task.id;
+        
+        if (task.completed) {
+            li.classList.add("completed");
+        }
+
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.id = `task-${task.id}`;
+        checkbox.checked = task.completed;
+
+        const label = document.createElement("label");
+        label.setAttribute("for", `task-${task.id}`);
+        label.textContent = task.text;
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.textContent = "Excluir";
+
+        li.appendChild(checkbox);
+        li.appendChild(label);
+        li.appendChild(deleteBtn);
+
+        taskList.appendChild(li);
+    });
+
+    applyFilter();
+}
