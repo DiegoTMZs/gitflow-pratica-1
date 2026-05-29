@@ -90,34 +90,26 @@ taskList.addEventListener("click", function (event) {
     }
 });
 
-// =========================
-// FILTRAR TAREFAS
-// =========================
 filter.addEventListener("change", applyFilter);
 
 function applyFilter() {
-
-    const tasks = document.querySelectorAll(".task-item");
-
+    const taskItems = document.querySelectorAll(".task-item");
     const filterValue = filter.value;
 
-    tasks.forEach(task => {
-
+    taskItems.forEach(task => {
         const completed = task.classList.contains("completed");
 
         if (filterValue === "all") {
             task.style.display = "flex";
-        }
-
-        else if (filterValue === "pending") {
+        } else if (filterValue === "pending") {
             task.style.display = completed ? "none" : "flex";
-        }
-
-        else if (filterValue === "completed") {
+        } else if (filterValue === "completed") {
             task.style.display = completed ? "flex" : "none";
         }
     });
 }
+
+
 function saveTasks() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 }
@@ -156,3 +148,4 @@ function renderTasks() {
 
     applyFilter();
 }
+renderTasks();
