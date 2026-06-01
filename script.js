@@ -149,3 +149,30 @@ function renderTasks() {
     applyFilter();
 }
 renderTasks();
+
+// =========================
+// MODO ESCURO (DARK MODE)
+// =========================
+const themeToggleBtn = document.getElementById("theme-toggle");
+const body = document.body;
+
+// Verifica se o usuário já havia escolhido o tema escuro antes
+const savedTheme = localStorage.getItem("theme");
+if (savedTheme === "dark") {
+    body.classList.add("dark-mode");
+    themeToggleBtn.textContent = "☀️"; // Muda o ícone para o sol
+}
+
+// Evento de clique para alternar o tema
+themeToggleBtn.addEventListener("click", () => {
+    body.classList.toggle("dark-mode");
+    
+    // Verifica se a classe foi adicionada e salva a preferência
+    if (body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+        themeToggleBtn.textContent = "☀️";
+    } else {
+        localStorage.setItem("theme", "light");
+        themeToggleBtn.textContent = "🌙";
+    }
+});
