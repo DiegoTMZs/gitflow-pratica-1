@@ -3,17 +3,12 @@ const input = document.querySelector(".task-form input");
 const taskList = document.querySelector(".task-list");
 const filter = document.querySelector("#filter");
 
-let taskId = 4;
-
-// =========================
-// CRIA SPINNER
-// =========================
 const spinner = document.createElement("div");
 spinner.classList.add("spinner");
 spinner.style.display = "none";
-
 document.body.appendChild(spinner);
 
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 // =========================
 // ADICIONAR TAREFA
 // =========================
@@ -22,7 +17,6 @@ form.addEventListener("submit", function (event) {
 
     const taskText = input.value.trim();
 
-    // VALIDAÇÕES
     if (taskText === "") {
         alert("Digite uma tarefa!");
         input.focus();
@@ -41,33 +35,105 @@ form.addEventListener("submit", function (event) {
         return;
     }
 
-    // verifica tarefa duplicada
-    const labels = document.querySelectorAll(".task-item label");
+    const taskExists = tasks.some(task => task.text.toLowerCase() === taskText.toLowerCase());
 
-    for (let label of labels) {
-        if (label.textContent.toLowerCase() === taskText.toLowerCase()) {
-            alert("Essa tarefa já existe.");
-            input.focus();
-            return;
-        }
+    if (taskExists) {
+        alert("Essa tarefa já existe.");
+        input.focus();
+        return;
     }
 
-    // MOSTRA SPINNER
     spinner.style.display = "block";
 
-    // simula carregamento
     setTimeout(() => {
+        const newTask = {
+            id: Date.now(),
+            text: taskText,
+            completed: false
+        };
 
+        tasks.push(newTask);
+        saveTasks();
+        renderTasks();
+
+        input.value = "";
+        spinner.style.display = "none";
+    }, 1000);
+});
+taskList.addEventListener("change", function (event) {
+    if (event.target.type === "checkbox") {
+        const taskItem = event.target.parentElement;
+        const taskId = Number(taskItem.dataset.id);
+        
+        const task = tasks.find(t => t.id === taskId);
+        
+        if (task) {
+            task.completed = event.target.checked;
+            saveTasks();
+            renderTasks();
+        }
+    }
+});
+
+taskList.addEventListener("click", function (event) {
+    if (event.target.classList.contains("delete-btn")) {
+        const confirmDelete = confirm("Deseja realmente excluir esta tarefa?");
+
+        if (!confirmDelete) return;
+
+        const taskItem = event.target.parentElement;
+        const taskId = Number(taskItem.dataset.id);
+
+        tasks = tasks.filter(t => t.id !== taskId);
+        saveTasks();
+        renderTasks();
+    }
+});
+
+filter.addEventListener("change", applyFilter);
+
+function applyFilter() {
+    const taskItems = document.querySelectorAll(".task-item");
+    const filterValue = filter.value;
+
+    taskItems.forEach(task => {
+        const completed = task.classList.contains("completed");
+
+        if (filterValue === "all") {
+            task.style.display = "flex";
+        } else if (filterValue === "pending") {
+            task.style.display = completed ? "none" : "flex";
+        } else if (filterValue === "completed") {
+            task.style.display = completed ? "flex" : "none";
+        }
+    });
+}
+
+
+function saveTasks() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+function renderTasks() {
+    taskList.innerHTML = "";
+    
+    tasks.forEach(task => {
         const li = document.createElement("li");
         li.classList.add("task-item");
+        li.dataset.id = task.id;
+        
+        if (task.completed) {
+            li.classList.add("completed");
+        }
 
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.id = `task-${taskId}`;
+        checkbox.id = `task-${task.id}`;
+        checkbox.checked = task.completed;
 
         const label = document.createElement("label");
-        label.setAttribute("for", `task-${taskId}`);
-        label.textContent = taskText;
+        label.setAttribute("for", `task-${task.id}`);
+        label.textContent = task.text;
 
         const deleteBtn = document.createElement("button");
         deleteBtn.classList.add("delete-btn");
@@ -78,78 +144,8 @@ form.addEventListener("submit", function (event) {
         li.appendChild(deleteBtn);
 
         taskList.appendChild(li);
-
-        input.value = "";
-
-        taskId++;
-
-        // ESCONDE SPINNER
-        spinner.style.display = "none";
-
-    }, 1000);
-});
-
-// =========================
-// MARCAR COMO CONCLUÍDA
-// =========================
-taskList.addEventListener("change", function (event) {
-
-    if (event.target.type === "checkbox") {
-
-        const taskItem = event.target.parentElement;
-
-        if (event.target.checked) {
-            taskItem.classList.add("completed");
-        } else {
-            taskItem.classList.remove("completed");
-        }
-
-        applyFilter();
-    }
-});
-
-// =========================
-// EXCLUIR TAREFA
-// =========================
-taskList.addEventListener("click", function (event) {
-
-    if (event.target.classList.contains("delete-btn")) {
-
-        const confirmDelete = confirm("Deseja realmente excluir esta tarefa?");
-
-        if (!confirmDelete) return;
-
-        const taskItem = event.target.parentElement;
-
-        taskItem.remove();
-    }
-});
-
-// =========================
-// FILTRAR TAREFAS
-// =========================
-filter.addEventListener("change", applyFilter);
-
-function applyFilter() {
-
-    const tasks = document.querySelectorAll(".task-item");
-
-    const filterValue = filter.value;
-
-    tasks.forEach(task => {
-
-        const completed = task.classList.contains("completed");
-
-        if (filterValue === "all") {
-            task.style.display = "flex";
-        }
-
-        else if (filterValue === "pending") {
-            task.style.display = completed ? "none" : "flex";
-        }
-
-        else if (filterValue === "completed") {
-            task.style.display = completed ? "flex" : "none";
-        }
     });
+
+    applyFilter();
 }
+renderTasks();
